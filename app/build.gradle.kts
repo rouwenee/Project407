@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.cs407.journeydoodle"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.cs407.journeydoodle"

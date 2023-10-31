@@ -12,9 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JourneyDoodle"
         tools:targetApi="31">
-        <meta-data
-            android:name="com.google.android.geo.AIzaSyCCn5wexmw52ZPFvAnQJCvq7XXT_8WCR2I"
-            android:value="@string/google_maps_key"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -24,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCCn5wexmw52ZPFvAnQJCvq7XXT_8WCR2I"/>
     </application>
-
 </manifest>

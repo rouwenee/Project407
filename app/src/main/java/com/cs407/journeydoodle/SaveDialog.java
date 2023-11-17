@@ -14,9 +14,9 @@ public class SaveDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Information")
-                .setMessage("This is a Dialog")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+        builder.setTitle("Save Route")
+                .setMessage("Please Enter the Route Name")
+                .setPositiveButton("SAVE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

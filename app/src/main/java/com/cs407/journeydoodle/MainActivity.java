@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        String id = (String) Installation.id(mapFragment.getContext());
+        Log.i("Info", "Printing user id: " + id);
+
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override

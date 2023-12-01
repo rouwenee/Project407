@@ -1,4 +1,4 @@
-package com.cs407.lab5_milestone;
+package com.cs407.journeydoodle;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -8,44 +8,44 @@ public class DBHelper {
     static SQLiteDatabase sqLiteDatabase;
     public DBHelper (SQLiteDatabase sqLiteDatabase){ this.sqLiteDatabase = sqLiteDatabase;}
     public static void createTable(){
-        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS notes "+"(id INTEGER PRIMARY KEY,noteID INTEGER, username TEST, date TEXT, content TEXT, title TEXT)");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS routes "+"(id INTEGER PRIMARY KEY, routeID INTEGER, username TEST, date TEXT, content TEXT, title TEXT)");
     }
-    public ArrayList<Notes> readNotes(String username) {
+    public ArrayList<Route> readRoute(String username) {
         createTable();
-        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM notes WHERE username LIKE ?",
+        Cursor c = sqLiteDatabase.rawQuery("SELECT * FROM routes WHERE username LIKE ?",
                 new String[]{"%" + username + "%"});
         int dateIndex = c.getColumnIndex("date");
         int titleIndex = c.getColumnIndex("title");
         int contentIndex = c.getColumnIndex("content");
         c.moveToFirst();
-        ArrayList<Notes> notesList = new ArrayList<>();
+        ArrayList<Route> routesList = new ArrayList<>();
         while(!c.isAfterLast()){
             String title = c.getString(titleIndex);
             String date = c.getString(dateIndex);
             String content = c.getString(contentIndex);
 
-            Notes notes = new Notes(date, username, title, content);
-            notesList.add(notes);
+            Route notes = new Route(date, username, title, content);
+            routesList.add(notes);
             c.moveToNext();
         }
         c.close();
         sqLiteDatabase.close();
-        return notesList;
+        return routesList;
     }
     public void saveRoute(String username, String title, String date, String content){
         createTable();
-        sqLiteDatabase.execSQL("INSERT INTO notes (username, date, title, content) VALUES (?, ?, ?, ?)",
+        sqLiteDatabase.execSQL("INSERT INTO routes (username, date, title, content) VALUES (?, ?, ?, ?)",
                 new String[]{username, date, title, content});
     }
     public void deleteRoute(String content, String title){
         createTable();
         String date = "";
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT date FROM notes WHERE content = ?",
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT date FROM routes WHERE content = ?",
                 new String[]{content});
         if(cursor.moveToNext()){
             date = cursor.getString(0);
         }
-        sqLiteDatabase.execSQL("DELETE FROM notes WHERE content = ? AND date = ?",
+        sqLiteDatabase.execSQL("DELETE FROM routes WHERE content = ? AND date = ?",
                 new String[]{content, date});
         cursor.close();
     }

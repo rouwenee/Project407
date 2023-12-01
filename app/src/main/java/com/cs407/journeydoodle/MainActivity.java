@@ -2,6 +2,7 @@ package com.cs407.journeydoodle;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     private void saveDialog() {
         SaveDialog saveDialog = new SaveDialog();
         saveDialog.show(getSupportFragmentManager(), "example dialog");
@@ -56,5 +59,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void loginFunction(View view) {
+
     }
 }

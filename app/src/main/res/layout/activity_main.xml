@@ -16,55 +16,40 @@
 
 
     <Button
-        android:id="@+id/startButton"
+        android:id="@+id/undoButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="646dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="34dp"
-        android:text="Start"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/saveButton"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/eraseButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="110dp"
+        android:layout_marginStart="160dp"
         android:layout_marginTop="646dp"
         android:layout_marginBottom="34dp"
-        android:text="Erase"
+        android:text="Undo"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/startButton"
-        app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.666" />
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="646dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="34dp"
         android:text="Save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.3"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.666" />
 
     <Button
-        android:id="@+id/drawButton"
+        android:id="@+id/clearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="646dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="646dp"
         android:layout_marginBottom="34dp"
-        android:text="Draw"
+        android:text="Clear"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.854"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

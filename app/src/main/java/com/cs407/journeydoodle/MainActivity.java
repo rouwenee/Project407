@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        String id = (String) Installation.id(mapFragment.getContext());
+        Log.i("Info", "Printing user id: " + id);
+
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,15 +71,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng sydney = new LatLng(-34, 151);
+        LatLng bascom = new LatLng(43.075142, -89.403419);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bascom, 16));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
 
-                if (markerPoints.size() > 4) {
+                if (markerPoints.size() > 20) {
                     markerPoints.clear();
                     mMap.clear();
                 }
@@ -101,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Checks, whether start and end locations are captured
                 if (markerPoints.size() >= 2) {
-                    LatLng origin = (LatLng) markerPoints.get(0);
-                    LatLng dest = (LatLng) markerPoints.get(1);
+                    LatLng origin = (LatLng) markerPoints.get(markerPoints.size()-2);
+                    LatLng dest = (LatLng) markerPoints.get(markerPoints.size()-1);
 
                     // Getting URL to the Google Directions API
                     String url = getDirectionsUrl(origin, dest);
@@ -232,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Sensor enabled
         String sensor = "sensor=false";
-        String mode = "mode=driving";
+        String mode = "mode=walking";
         // Building the parameters to the web service
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
 

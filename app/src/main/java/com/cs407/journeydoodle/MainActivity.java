@@ -54,6 +54,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) { saveDialog(); }
         });
+        Button clearButton = findViewById(R.id.clearButton);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markerPoints.clear();
+                mMap.clear();
+        }
+        });
 
     }
 

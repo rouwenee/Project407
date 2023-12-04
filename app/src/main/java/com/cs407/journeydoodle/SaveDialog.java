@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,8 +25,12 @@ public class SaveDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
+                        Toast.makeText(getContext(),
+                                "Successfully Saved Route", Toast.LENGTH_LONG).show();
+
                     }
                 });
+
         return builder.create();
     }
 }

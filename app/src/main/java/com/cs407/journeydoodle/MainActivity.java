@@ -19,8 +19,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONObject;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private GoogleMap mMap;
     ArrayList markerPoints = new ArrayList();
+    List<Polyline> polylines = new ArrayList();
+    List<Marker> markers = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         });
 
+        Button undoButton = findViewById(R.id.undoButton);
+        undoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (polylines.size() != 0) {
+                    polylines.get(polylines.size()-1).remove();
+                    markers.get(markers.size()-1).remove();
+
+                    polylines.remove(polylines.size()-1);
+                    markers.remove(markers.size()-1);
+                    markerPoints.remove(markerPoints.size()-1);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -79,11 +98,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onMapClick(LatLng latLng) {
 
-                if (markerPoints.size() > 20) {
-                    markerPoints.clear();
-                    mMap.clear();
-                }
-
                 // Adding new item to the ArrayList
                 markerPoints.add(latLng);
 
@@ -95,12 +109,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 if (markerPoints.size() == 1) {
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else if (markerPoints.size() == 2) {
+                } else {
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 }
 
                 // Add new marker to the Google Map Android API V2
-                mMap.addMarker(options);
+                markers.add(mMap.addMarker(options));
 
                 // Checks, whether start and end locations are captured
                 if (markerPoints.size() >= 2) {
@@ -158,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            System.out.println(result);
+            //System.out.println(result);
             ParserTask parserTask = new ParserTask();
 
 
@@ -196,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ArrayList points = null;
             PolylineOptions lineOptions = null;
             MarkerOptions markerOptions = new MarkerOptions();
-            System.out.println(result.size());
+            //System.out.println(result.size());
             for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList();
                 lineOptions = new PolylineOptions();
@@ -221,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
             // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
+            polylines.add(mMap.addPolyline(lineOptions));
         }
     }
 

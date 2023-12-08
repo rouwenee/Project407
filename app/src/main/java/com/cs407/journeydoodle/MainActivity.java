@@ -72,11 +72,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 DBHelper db = new DBHelper(sq);
                 // entire block needs reviewing
                 String title = saveDialog.getRouteName();
+                Log.i("INFO", "Printing title of route: " + title);
                 DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
                 String date = dateFormat.format(new Date());
                 String content = "";
-                // Mary: Work on converting the array list markerPoints and store that as a string, each latitude and longitude
-                // object separated by commas.
+                // concatenates every marker point in the array list as a string with a comma in
+                // between
+                for(int i = 0; i < markerPoints.size(); i++) {
+                    if(i == markerPoints.size() - 1) {
+                        content = content + markerPoints.get(i).toString();
+                    } else {
+                        content = content + markerPoints.get(i).toString() + ", ";
+                    }
+                }
+                content.trim(); // removes whitespace from both ends of the string
+
+                // stores username, name of route (user input), date, and array content (of marker
+                // locations into database
                 db.saveRoute("", title, date, content);
             }
         });

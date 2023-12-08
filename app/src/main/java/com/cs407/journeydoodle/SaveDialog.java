@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class SaveDialog extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
                         userInput = taskEditText.getText().toString();
+                        Log.i("INFO", "Printing user input from dialog: " + userInput);
                         Toast.makeText(getContext(),
                                 "Successfully Saved Route", Toast.LENGTH_LONG).show();
 

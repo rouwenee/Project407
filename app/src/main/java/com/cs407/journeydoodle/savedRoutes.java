@@ -29,6 +29,12 @@ public class savedRoutes extends AppCompatActivity {
         setContentView(R.layout.saved_routes);
         getSupportActionBar().setTitle("Saved Routes");
 
+        Context context = getApplicationContext();
+        SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
+        DBHelper db = new DBHelper(sq);
+
+        routes = db.readRoute("");
+
         ArrayList<String> displayRoutes = new ArrayList<>();
 
         for (Route routes : routes) {
@@ -43,10 +49,11 @@ public class savedRoutes extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("noteId", i);
-                SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
-                DBHelper db = new DBHelper(sq);
                 startActivity(intent);
             }
         });
     }
+    /*public void addRoute() {
+
+    }*/
 }

@@ -152,11 +152,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
     }
-
-    /*private void saveDialog() {
-        SaveDialog saveDialog = new SaveDialog();
-        saveDialog.show(getSupportFragmentManager(), "example dialog");
-    }*/
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);

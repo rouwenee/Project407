@@ -1,8 +1,12 @@
 package com.cs407.journeydoodle;
 
+import static android.database.sqlite.SQLiteDatabase.openOrCreateDatabase;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -12,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class SaveDialog extends AppCompatDialogFragment {
+    String userInput;
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -25,6 +30,7 @@ public class SaveDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String task = String.valueOf(taskEditText.getText());
+                        userInput = taskEditText.getText().toString();
                         Toast.makeText(getContext(),
                                 "Successfully Saved Route", Toast.LENGTH_LONG).show();
 
@@ -32,5 +38,8 @@ public class SaveDialog extends AppCompatDialogFragment {
                 });
 
         return builder.create();
+    }
+    public String getRouteName(String s) {
+        return userInput;
     }
 }

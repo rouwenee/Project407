@@ -3,7 +3,10 @@ package com.cs407.journeydoodle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,8 +35,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -59,7 +65,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { saveDialog(); }
+            public void onClick(View v) {
+                SaveDialog saveDialog = new SaveDialog();
+                saveDialog.show(getSupportFragmentManager(), "example dialog");
+                SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
+                DBHelper db = new DBHelper(sq);
+                // entire block needs reviewing
+                String title = saveDialog.getRouteName();
+                DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+                String date = dateFormat.format(new Date());
+                String content =
+                db.saveRoute("", title, date, );
+            }
         });
         Button clearButton = findViewById(R.id.clearButton);
         clearButton.setOnClickListener(new View.OnClickListener() {
@@ -134,10 +151,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-    private void saveDialog() {
+    /*private void saveDialog() {
         SaveDialog saveDialog = new SaveDialog();
         saveDialog.show(getSupportFragmentManager(), "example dialog");
-    }
+    }*/
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);

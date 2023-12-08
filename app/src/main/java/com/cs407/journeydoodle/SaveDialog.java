@@ -39,7 +39,7 @@ public class SaveDialog extends AppCompatDialogFragment {
 
         return builder.create();
     }
-    public String getRouteName(String s) {
+    public String getRouteName() {
         return userInput;
     }
 }

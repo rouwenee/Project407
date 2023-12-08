@@ -74,8 +74,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 String title = saveDialog.getRouteName();
                 DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
                 String date = dateFormat.format(new Date());
-                String content =
-                db.saveRoute("", title, date, );
+                String content = "";
+                // Mary: Work on converting the array list markerPoints and store that as a string, each latitude and longitude
+                // object separated by commas.
+                db.saveRoute("", title, date, content);
             }
         });
         Button clearButton = findViewById(R.id.clearButton);

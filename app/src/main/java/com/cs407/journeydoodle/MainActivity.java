@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -59,32 +58,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        String id = (String) Installation.id(mapFragment.getContext());
-        Log.i("Info", "Printing user id: " + id);
-
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
-                DBHelper db = new DBHelper(sq);
-                DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
-                String date = dateFormat.format(new Date());
-                String content = "";
-                // concatenates every marker point in the array list as a string with a comma in
-                // between
-                for(int i = 0; i < markerPoints.size(); i++) {
-                    if(i == markerPoints.size() - 1) {
-                        content = content + markerPoints.get(i).toString();
-                    } else {
-                        content = content + markerPoints.get(i).toString() + ", ";
-                    }
-                }
-                content.trim(); // removes whitespace from both ends of the string
                 showDialog();
-                // stores username, name of route (user input), date, and array content (of marker
-                // locations into database
-                db.saveRoute("", title, date, content);
             }
         });
         Button clearButton = findViewById(R.id.clearButton);
@@ -120,13 +98,45 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         saveDialog.setStringDataCallback(this);
         saveDialog.show(getSupportFragmentManager(), "example dialog");
     }
+
+    private void saveToDBAfterUserInput(String username, DBHelper d) {
+        DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+        String date = dateFormat.format(new Date());
+        String content = "";
+        // concatenates every marker point in the array list as a string with a comma in
+        // between
+        for(int i = 0; i < markerPoints.size(); i++) {
+            if(i == markerPoints.size() - 1) {
+                content = content + markerPoints.get(i).toString();
+            } else {
+                content = content + markerPoints.get(i).toString() + ", ";
+            }
+        }
+        content.trim(); // removes whitespace from both ends of the string
+        // stores username, name of route (user input), date, and array content (of marker
+        // locations into database
+        Log.i("INFO", "Printing username id: " + username);
+        d.saveRoute(username, title, date, content);
+        Log.i("INFO", "Printing marker locations of saved route: " + content);
+        Log.i("INFO", "Printing title after storing title to database: " + title);
+    }
     /*
      * The callback method that assigns the title of the route
      */
     @Override
     public void onStringDataReceived(String data) {
         title = data;
-        Log.i("INFO", "Printing title of route: " + title);
+        Log.i("INFO", "Received title of route: " + title);
+
+
+        Context context = getApplicationContext();
+        Installation installation = new Installation();
+        String id = installation.id(context);
+        Log.i("Info", "Printing user id from main: " + id);
+        SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
+        DBHelper db = new DBHelper(sq);
+        saveToDBAfterUserInput(id, db);
+        Log.i("INFO", "Printing title after saving route: " + title);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
@@ -32,8 +33,10 @@ public class savedRoutes extends AppCompatActivity {
         Context context = getApplicationContext();
         SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
         DBHelper db = new DBHelper(sq);
-
-        routes = db.readRoute("");
+        // Installation installation = new Installation();
+        // String id = Installation.id(context);
+        // Log.i("Info", "Printing user id from list view: " + id);
+        routes = db.readRoute(new Installation().id(context));
 
         ArrayList<String> displayRoutes = new ArrayList<>();
 

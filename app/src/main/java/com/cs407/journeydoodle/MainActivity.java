@@ -43,12 +43,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, StringDataCallback {
     private GoogleMap mMap;
     ArrayList markerPoints = new ArrayList();
     List<Polyline> polylines = new ArrayList();
     List<Marker> markers = new ArrayList();
+    private String title = ""; // title to set when storing saved route in database and list
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,13 +66,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SaveDialog saveDialog = new SaveDialog();
-                saveDialog.show(getSupportFragmentManager(), "example dialog");
                 SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
                 DBHelper db = new DBHelper(sq);
-                // entire block needs reviewing
-                String title = saveDialog.getRouteName();
-                Log.i("INFO", "Printing title of route: " + title);
                 DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
                 String date = dateFormat.format(new Date());
                 String content = "";
@@ -86,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
                 content.trim(); // removes whitespace from both ends of the string
-
+                showDialog();
                 // stores username, name of route (user input), date, and array content (of marker
                 // locations into database
                 db.saveRoute("", title, date, content);
@@ -116,6 +111,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
+    }
+    /*
+     * Method that displays the dialog.
+     */
+    private void showDialog() {
+        SaveDialog saveDialog = new SaveDialog();
+        saveDialog.setStringDataCallback(this);
+        saveDialog.show(getSupportFragmentManager(), "example dialog");
+    }
+    /*
+     * The callback method that assigns the title of the route
+     */
+    @Override
+    public void onStringDataReceived(String data) {
+        title = data;
+        Log.i("INFO", "Printing title of route: " + title);
     }
 
     @Override

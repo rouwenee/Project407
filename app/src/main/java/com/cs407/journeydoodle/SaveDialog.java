@@ -20,6 +20,7 @@ interface StringDataCallback {
     void onStringDataReceived(String data);
 }
 public class SaveDialog extends AppCompatDialogFragment {
+    String userInput = "";
     private StringDataCallback stringDataCallback;
     public void setStringDataCallback(StringDataCallback callback) {
         this.stringDataCallback = callback;

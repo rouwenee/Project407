@@ -38,7 +38,7 @@ public class DBHelper {
         createTable();
         sqLiteDatabase.execSQL("INSERT INTO routes (username, date, title, content) VALUES (?, ?, ?, ?)",
                 new String[]{username, date, title, content});
-       // Route newRoute = new Route(username, date, title, content);
+        // Route newRoute = new Route(username, date, title, content);
     }
     public void deleteRoute(int id){
         createTable();

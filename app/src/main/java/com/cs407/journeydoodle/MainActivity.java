@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         undoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (markerPoints.size() != 0) {
+                if (polylines.size() != 0) {
                     polylines.get(polylines.size()-1).remove();
                     markers.get(markers.size()-1).remove();
 
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 2; i <= splitedContent.length; i += 2) {
                 matcher = pattern.matcher(splitedContent[i-2]);
                 if (matcher.find()) { // need to find before getting start/end index
-                    longitude = Double.parseDouble(splitedContent[i - 2].substring(matcher.start(), matcher.end()));
+                    latitude = Double.parseDouble(splitedContent[i - 2].substring(matcher.start(), matcher.end()));
                 } else {
                     Log.i("INFO", "ERROR Latitude not found");
                 }
@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Log.i("INFO", "ERROR Longitude not found");
                 }
 
-                //Log.i("INFO", "split: " + splitedContent[i - 2] + " | " + splitedContent[i - 1]);
                 Log.i("INFO", "#" + i / 2 + " lat: " + latitude + " long: " + longitude);
 
                 latLng = new LatLng(latitude, longitude);
@@ -191,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 MarkerOptions options = new MarkerOptions();
                 options.position(latLng);
                 markers.add(mMap.addMarker(options));
+
                 if (markerPoints.size() >= 2) {
                     LatLng origin = (LatLng) markerPoints.get(markerPoints.size() - 2);
                     LatLng dest = (LatLng) markerPoints.get(markerPoints.size() - 1);
@@ -208,13 +208,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         } else {
             LatLng bascom = new LatLng(43.075142, -89.403419);
-            //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bascom, 16));
         }
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
 
+                Log.i("INFO", "Clicked LatLng: " + latLng.toString());
                 // Adding new item to the ArrayList
                 markerPoints.add(latLng);
 

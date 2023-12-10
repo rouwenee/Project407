@@ -33,10 +33,7 @@ public class savedRoutes extends AppCompatActivity {
         Context context = getApplicationContext();
         SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
         DBHelper db = new DBHelper(sq);
-        // Installation installation = new Installation();
-        // String id = Installation.id(context);
-        // Log.i("Info", "Printing user id from list view: " + id);
-        routes = db.readRoute(new Installation().id(context));
+        routes = db.readRoute(Installation.id(context));
 
         ArrayList<String> displayRoutes = new ArrayList<>();
 

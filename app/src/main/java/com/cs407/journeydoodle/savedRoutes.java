@@ -1,6 +1,8 @@
 package com.cs407.journeydoodle;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class savedRoutes extends AppCompatActivity {
 
@@ -33,9 +36,6 @@ public class savedRoutes extends AppCompatActivity {
         Context context = getApplicationContext();
         SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
         DBHelper db = new DBHelper(sq);
-        // Installation installation = new Installation();
-        // String id = Installation.id(context);
-        // Log.i("Info", "Printing user id from list view: " + id);
         routes = db.readRoute(new Installation().id(context));
 
         ArrayList<String> displayRoutes = new ArrayList<>();
@@ -55,8 +55,36 @@ public class savedRoutes extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-    /*public void addRoute() {
 
-    }*/
+        notesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                showDeleteConfirmationDialog(i, adapter);
+                return true;
+            }
+        });
+    }
+    private void showDeleteConfirmationDialog(final int position, ArrayAdapter a) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do you want to delete this item?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Delete the item and refresh the list
+                        a.notifyDataSetChanged();
+                        // Add your code to perform the deletion or launch your delete intent
+                        SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
+                        DBHelper db = new DBHelper(sq);
+                        // db.deleteRoute(r.get(position).getContent(), r.get(position).getTitle());
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Cancel the delete operation
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+    }
 }

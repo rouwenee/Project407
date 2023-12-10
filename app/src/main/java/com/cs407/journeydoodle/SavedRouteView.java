@@ -31,6 +31,14 @@ public class SavedRouteView extends AppCompatActivity implements OnMapReadyCallb
 
         String id = (String) Installation.id(mapFragment.getContext());
         Log.i("Info", "Printing user id: " + id);
+
+        deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 

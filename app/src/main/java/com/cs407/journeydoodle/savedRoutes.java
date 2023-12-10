@@ -51,32 +51,30 @@ public class savedRoutes extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("noteId", i);
+                intent.putExtra("routeId", i);
                 startActivity(intent);
             }
         });
 
         notesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showDeleteConfirmationDialog(i, adapter, routes);
+                showDeleteConfirmationDialog(i, adapter);
                 return true;
             }
         });
     }
-    private void showDeleteConfirmationDialog(final int position, ArrayAdapter a, ArrayList<Route> r) {
+    private void showDeleteConfirmationDialog(final int position, ArrayAdapter a) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to delete this item?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Delete the item and refresh the list
-                        r.remove(position);
                         a.notifyDataSetChanged();
                         // Add your code to perform the deletion or launch your delete intent
                         SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
                         DBHelper db = new DBHelper(sq);
-                        db.deleteRoute(r.get(position).getId());
-                        goBack();
+                        // db.deleteRoute(r.get(position).getContent(), r.get(position).getTitle());
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -88,20 +86,5 @@ public class savedRoutes extends AppCompatActivity {
                 });
 
         builder.create().show();
-    }
-
-    /*private ArrayList<String> createListOfRoutes(DBHelper d) {
-        routes = d.readRoute(new Installation().id(getApplicationContext()));
-
-        ArrayList<String> displayRoutes = new ArrayList<>();
-
-        for (Route routes : routes) {
-            displayRoutes.add(String.format("Title:%s\nDate:%s\n", routes.getTitle(), routes.getDate()));
-        }
-        return displayRoutes;
-    }*/
-    public void goBack() {
-        Intent intent = new Intent(this,savedRoutes.class);
-        startActivity(intent);
     }
 }

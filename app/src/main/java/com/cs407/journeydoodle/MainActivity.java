@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -41,6 +42,8 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, StringDataCallback {
     private GoogleMap mMap;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<Marker> markers = new ArrayList();
     private String title = ""; // title to set when storing saved route in database and list
 
+    private int routeId = -1; // default route, when no route is selected
+    public static ArrayList<Route> routes = new ArrayList<>(); // list of saved routes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setTitle("Journey Doodle");
@@ -58,10 +63,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // check if saved route is called
+        Intent intent = getIntent();
+        routeId = intent.getIntExtra("routeId", routeId);
+        Log.i("INFO", "routeId: " + routeId);
+
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: if (routeId != -1) update the route
                 showDialog();
             }
         });
@@ -71,14 +82,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 markerPoints.clear();
                 mMap.clear();
-        }
+            }
         });
 
         Button undoButton = findViewById(R.id.undoButton);
         undoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (polylines.size() != 0) {
+                if (markerPoints.size() != 0) {
                     polylines.get(polylines.size()-1).remove();
                     markers.get(markers.size()-1).remove();
 
@@ -115,10 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         content.trim(); // removes whitespace from both ends of the string
         // stores username, name of route (user input), date, and array content (of marker
         // locations into database
-        Log.i("INFO", "Printing username id: " + username);
         d.saveRoute(username, title, date, content);
-        Log.i("INFO", "Printing marker locations of saved route: " + content);
-        Log.i("INFO", "Printing title after storing title to database: " + title);
     }
     /*
      * The callback method that assigns the title of the route
@@ -142,10 +150,67 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng bascom = new LatLng(43.075142, -89.403419);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bascom, 16));
 
+        // TODO: if(routeId != -1) load the routes into the map
+        if (routeId != -1) {
+            // get selected route
+            routes = savedRoutes.routes;
+            Route route = routes.get(routeId);
+            String routeContent = route.getContent();
+            Log.i("INFO", "routeId: " + routeId + " content: " + routeContent);
+
+            // convert String content to list of LatLng
+            String[] splitedContent = routeContent.split(",");
+            Double latitude = 43.075142;
+            Double longitude = -89.403419;
+            Pattern pattern = Pattern.compile("-?\\d+.\\d+"); // match double using regex
+            Matcher matcher;
+            LatLng latLng;
+            for (int i = 2; i <= splitedContent.length; i += 2) {
+                matcher = pattern.matcher(splitedContent[i-2]);
+                if (matcher.find()) { // need to find before getting start/end index
+                    longitude = Double.parseDouble(splitedContent[i - 2].substring(matcher.start(), matcher.end()));
+                } else {
+                    Log.i("INFO", "ERROR Latitude not found");
+                }
+
+                matcher = pattern.matcher(splitedContent[i-1]);
+                if (matcher.find()) {
+                    longitude = Double.parseDouble(splitedContent[i - 1].substring(matcher.start(), matcher.end()));
+                } else {
+                    Log.i("INFO", "ERROR Longitude not found");
+                }
+
+                //Log.i("INFO", "split: " + splitedContent[i - 2] + " | " + splitedContent[i - 1]);
+                Log.i("INFO", "#" + i / 2 + " lat: " + latitude + " long: " + longitude);
+
+                latLng = new LatLng(latitude, longitude);
+                if(i/2 == 1)
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+                markerPoints.add(latLng);
+                MarkerOptions options = new MarkerOptions();
+                options.position(latLng);
+                markers.add(mMap.addMarker(options));
+                if (markerPoints.size() >= 2) {
+                    LatLng origin = (LatLng) markerPoints.get(markerPoints.size() - 2);
+                    LatLng dest = (LatLng) markerPoints.get(markerPoints.size() - 1);
+
+                    // Getting URL to the Google Directions API
+                    String url = getDirectionsUrl(origin, dest);
+
+                    DownloadTask downloadTask = new DownloadTask();
+
+                    // Start downloading json data from Google Directions API
+                    downloadTask.execute(url);
+                }
+
+            }
+
+        } else {
+            LatLng bascom = new LatLng(43.075142, -89.403419);
+            //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bascom, 16));
+        }
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -170,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 // Checks, whether start and end locations are captured
                 if (markerPoints.size() >= 2) {
-                    LatLng origin = (LatLng) markerPoints.get(markerPoints.size()-2);
-                    LatLng dest = (LatLng) markerPoints.get(markerPoints.size()-1);
+                    LatLng origin = (LatLng) markerPoints.get(markerPoints.size() - 2);
+                    LatLng dest = (LatLng) markerPoints.get(markerPoints.size() - 1);
 
                     // Getting URL to the Google Directions API
                     String url = getDirectionsUrl(origin, dest);

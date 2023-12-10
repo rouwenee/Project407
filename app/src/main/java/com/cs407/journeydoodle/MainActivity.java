@@ -33,6 +33,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<Marker> markers = new ArrayList();
     private String title = ""; // title to set when storing saved route in database and list
 
+    private int routeId = -1; // default route, when no route is selected
+    public static ArrayList<Route> routes = new ArrayList<>(); // list of saved routes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setTitle("Journey Doodle");
@@ -58,10 +61,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // check if saved route is called
+        Intent intent = getIntent();
+        routeId = intent.getIntExtra("routeId", routeId);
+        Log.i("INFO", "routeId: " + routeId);
+
         Button saveButton = findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: if (routeId != -1) update the route
                 showDialog();
             }
         });
@@ -71,14 +80,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onClick(View v) {
                 markerPoints.clear();
                 mMap.clear();
-        }
+            }
         });
 
         Button undoButton = findViewById(R.id.undoButton);
         undoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (polylines.size() != 0) {
+                if (markerPoints.size() != 0) {
                     polylines.get(polylines.size()-1).remove();
                     markers.get(markers.size()-1).remove();
 
@@ -142,6 +151,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        // TODO: if(routeId != -1) load the routes into the map
+        /*if(routeId != -1) {
+            routes = savedRoutes.routes;
+            Route route = routes.get(routeId);
+            String routeContent = route.getContent();
+            String[] splitedContent = routeContent.split(",");
+            Double latitude;
+            Double longtitude;
+            for(int i = 0; i < splitedContent.length; i += 2){
+                latitude =
+            }
+
+        }*/
         LatLng bascom = new LatLng(43.075142, -89.403419);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(bascom, 16));

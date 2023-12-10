@@ -19,6 +19,8 @@ import java.util.Date;
 
 public class SavedRouteView extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
+
+    private int routeId = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setTitle("Journey Doodle");
@@ -32,6 +34,8 @@ public class SavedRouteView extends AppCompatActivity implements OnMapReadyCallb
         Log.i("Info", "Printing user id: " + id);
     }
     public void onMapReady(GoogleMap googleMap) {
+        // content: lat/lng: (-34.3423, 12.1432), lat/lng: (signed long, signed long)
+
 
     }
 }

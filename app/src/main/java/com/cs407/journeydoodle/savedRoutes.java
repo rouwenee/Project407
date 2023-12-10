@@ -51,12 +51,9 @@ public class savedRoutes extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("noteId", i);
+                intent.putExtra("routeId", i);
                 startActivity(intent);
             }
         });
     }
-    /*public void addRoute() {
-
-    }*/
 }

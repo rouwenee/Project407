@@ -19,8 +19,7 @@ import java.util.Date;
 
 public class SavedRouteView extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-
-    private int routeId = -1;
+    private Button deleteButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getSupportActionBar().setTitle("Journey Doodle");
@@ -32,10 +31,18 @@ public class SavedRouteView extends AppCompatActivity implements OnMapReadyCallb
 
         String id = (String) Installation.id(mapFragment.getContext());
         Log.i("Info", "Printing user id: " + id);
-    }
-    public void onMapReady(GoogleMap googleMap) {
-        // content: lat/lng: (-34.3423, 12.1432), lat/lng: (signed long, signed long)
 
+        deleteButton = findViewById(R.id.deleteButton);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+
+
+    public void onMapReady(GoogleMap googleMap) {
 
     }
 }

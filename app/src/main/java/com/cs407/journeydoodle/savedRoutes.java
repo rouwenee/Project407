@@ -58,12 +58,12 @@ public class savedRoutes extends AppCompatActivity {
 
         notesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                showDeleteConfirmationDialog(i, adapter);
+                showDeleteConfirmationDialog(i, adapter, routes.get(i), displayRoutes);
                 return true;
             }
         });
     }
-    private void showDeleteConfirmationDialog(final int position, ArrayAdapter a) {
+    private void showDeleteConfirmationDialog(final int position, ArrayAdapter a, Route r, ArrayList<String> d) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Do you want to delete this item?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -74,7 +74,9 @@ public class savedRoutes extends AppCompatActivity {
                         // Add your code to perform the deletion or launch your delete intent
                         SQLiteDatabase sq = openOrCreateDatabase("routes", Context.MODE_PRIVATE, null);
                         DBHelper db = new DBHelper(sq);
-                        // db.deleteRoute(r.get(position).getContent(), r.get(position).getTitle());
+                        d.remove(position); // removes route (in string format) from list view
+                        db.deleteRoute(r.getId()); // removes route from database
+
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {

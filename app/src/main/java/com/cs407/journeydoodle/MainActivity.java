@@ -42,6 +42,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void saveToDBAfterUserInput(String username, DBHelper d) {
-        DateFormat dateFormat = new SimpleDateFormat("MM/DD/YYYY HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss", Locale.US);
         String date = dateFormat.format(new Date());
         String content = "";
         // concatenates every marker point in the array list as a string with a comma in
